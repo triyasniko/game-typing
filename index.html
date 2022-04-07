@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ketik Aja Udah</title>
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Boogaloo|Ceviche+One|Kalam|Source+Code+Pro|VT323"
+        rel="stylesheet">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+    <style>
+        nav {
+            font-family: kalam;
+            background-color: rgba(3, 141, 168, 0.7);
+        }
+
+        .navbar-brand {
+            font-size: 36px;
+        }
+
+        body {
+            background-image: url('bg.jpg');
+            background-size: cover;
+        }
+
+        #subtitle{
+            color: #fff;
+            font-size: 1.1rem;
+            font-family:  Source code pro;
+        }
+
+        .jumbotron {
+            background-color: rgba(21, 172, 201, 0.4);
+            font-weight: bold;
+            font-family: Source code pro;
+            color: #f3f3f3;
+            border: 1px solid #282828;
+        }
+
+        #currentWord{
+            font-size: 3rem;
+        }
+        #timeDisplay{
+            font-size: 1.8rem;
+        }
+
+        .bg-darkgreen {
+            /* background: rgb(0,82,98, 0.7); */
+            background: linear-gradient(90deg, rgba(0, 82, 98, 0.4) 0%, rgba(16, 94, 110, 0.2) 35%, rgba(70, 140, 154, 0.5) 80%);
+            border-radius: 10px;
+        }
+
+        #content {
+            background-color: rgba(21, 172, 201, 0.4);
+            font-family: Source code pro;
+            color: #fff;
+        }
+
+        #score {
+            font-family: boogaloo;
+        }
+
+        #inputWord{
+            font-family: boogaloo;
+            letter-spacing: 0.15em;
+            background-color: rgba(255, 255, 255, 0.7);
+            animation-name: inputWordAnimate;
+            animation-duration: 7s;
+        }
+
+        @keyframes inputWordAnimate {
+            /* 0%{
+                width: 50%;
+            }
+            100%{
+                width: 100%;
+            } */
+            from {width: 10%;}
+            to {width: 100%;}
+        }
+    </style>
+</head>
+
+<body>
+    <!-- A vertical navbar -->
+    <nav class="navbar navbar-light navbar-expand-sm fixed-top justify-content-center">
+        <!-- Links -->
+        <a class="navbar-brand text-light" href="#">Ketik Aja Udah</a>
+    </nav>
+    <div class="container-fluid pt-5 mt-5">
+        <div class="row text-center mx-auto justify-content-center">
+            <div class="col-xs-8 col-sm-9 col-md-7">
+                <p id="subtitle"></p>
+                <div class="jumbotron">
+                    <div class="bg-darkgreen">
+                        <p class="p-4" id="currentWord"></p>
+                    </div>
+                    <p id="timeDisplay"></p>
+                    
+                </div>
+            </div>
+        </div>
+        <div class="row text-center mx-auto justify-content-center">
+            <div class="col-xs-8 col-sm-9 col-md-7">
+                <div class="card border-dark" id="content">
+                    <div class="card-body text-success">
+                        <input id="inputWord" class="form-control" placeholder="Mulai Mengetik Disini.."></input>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row text-center mx-auto justify-content-center mt-2">
+            <h3 id="score">Score : <span id="scoreDisplay">0</span></h3>
+        </div>
+    </div>
+
+    <!-- jQuery library -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.slim.min.js"></script>
+    <!-- Popper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <!-- Latest compiled JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+    <script>
+
+        // let currentWord = document.getElementById('currentWord');
+        // // console.log(currentWord);
+        
+        // let words = ['mandi', 'tidur','makan','berenang','javascript'];
+        // // let indexWord = Math.floor(Math.random() * words.length);
+        // console.log(Math.floor(Math.random() * words.length));
+
+        // // currentWord.innerHTML = words[indexWord];
+        // window.addEventListener('load', function () {
+        //     // let currentWord = document.getElementById('currentWord').innerHTML;
+        //     // $('#myModal').modal('show');
+        //     // console.log(words[indexWord]);
+        //     let inputWord;
+        //     let randomWord=setInterval(function(){
+        //         // console.log("test time interval")
+        //         currentWord.innerHTML = words[Math.floor(Math.random() * words.length)];
+        //         console.log(currentWord.innerHTML);
+        //         inputWord='';
+        //     },3000);
+
+            
+
+        //     document.addEventListener('input', function () {
+        //         inputWord = document.getElementById('inputWord').value;
+        //         console.log(inputWord);
+
+
+        //         let score = 0;
+        //         // if (inputWord == currentWord.innerHTML) {
+        //         //     console.log('wih bener');
+        //         //     score++;
+        //         //     console.log(inputWord, "!!!!!");
+        //         //     inputWord='';
+        //         //     console.log(inputWord, "####");
+        //         //     currentWord.innerHTML = words[indexWord];
+        //         //     console.log(score);
+        //         // }
+        //         // console.log(score);
+        //     })
+        // })
+        
+        var typed = new Typed('#subtitle',{
+            strings: ['Ketik kata dibawah ini secepat yang kamu bisa!!!'],
+            typeSpeed: 70,
+        });
+
+        window.addEventListener('load',init);
+
+        let time = 5;
+        let timeDisplay=document.getElementById('timeDisplay');
+        let score=0;
+        let scoreDisplay=document.getElementById('scoreDisplay');
+        let isPlaying;
+        const words = [
+            'angular',
+            'function',
+            'for',
+            'while',
+            'throw',
+            'css',
+            'break',
+            'try',
+            'echo',
+            'let',
+            'catch',
+            'javascript',
+            'program',
+            'coding',
+            'case',
+            'react',
+            'api',
+            'init',
+            'float',
+            'block',
+            'machine',
+            'deploy',
+            'terminal',
+            'array',
+            'vue',
+            'node',
+            'html',
+            'frontend',
+            'grid',
+            'stack',
+            'console',
+            'ajax',
+            'heroku',
+            'loop',
+            'sql',
+            'php',
+            'data',
+            'npm',
+            'server',
+        ];
+        function init(){
+            showWord(words);
+            setInterval(countdown,1000);
+            inputWord.addEventListener('input',function(){
+                if(inputWord.value!=""){
+                    time=5;
+                }
+                if(matchWords()){
+                    time=5;
+                    showWord(words);
+                    inputWord.value='';
+                    score++;
+                    // console.log(score);
+                }
+                scoreDisplay.innerHTML=score;
+            });
+        }
+
+        function matchWords(){
+            if(inputWord.value===currentWord.innerHTML){
+                return true;
+            }else{
+                return false;
+            }
+        }
+        function showWord(word){
+            const randIndex=Math.floor(Math.random() * words.length);
+            currentWord.innerHTML=words[randIndex];
+        }
+
+        function countdown(){
+            if(time>0){
+                time--;
+            }else if(time===0){
+                // alert("Your time it's over");
+                score=0;
+            }
+            timeDisplay.innerHTML=time;
+        }
+
+    </script>
+</body>
+
+</html>
